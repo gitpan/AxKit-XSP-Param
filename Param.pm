@@ -1,15 +1,15 @@
-# $Id: Param.pm,v 1.4 2001/02/16 22:03:08 matt Exp $
+# $Id: Param.pm,v 1.7 2001/06/04 10:08:43 matt Exp $
 
 package AxKit::XSP::Param;
 use strict;
-use Apache::AxKit::Language::XSP qw(start_expr append_to_script end_expr);
+use Apache::AxKit::Language::XSP;
 
 use vars qw/@ISA $NS $VERSION/;
 
 @ISA = ('Apache::AxKit::Language::XSP');
 $NS = 'http://axkit.org/NS/xsp/param/v1';
 
-$VERSION = "1.0";
+$VERSION = "1.4";
 
 ## Taglib subs
 
@@ -21,9 +21,9 @@ sub parse_start {
     my ($e, $tag, %attribs) = @_; 
     #warn "Checking: $tag\n";
 
-    start_expr($e, $tag);
-    append_to_script($e, '$cgi->param(q|' . $tag . '|)');
-    end_expr($e);
+    $e->start_expr($tag);
+    $e->append_to_script('$cgi->param(q|' . $tag . '|)');
+    $e->end_expr();
     return '';    
 }
 
@@ -59,7 +59,7 @@ Add the param: namespace to your XSP C<<xsp:page>> tag:
     <xsp:page
          language="Perl"
          xmlns:xsp="http://apache.org/xsp/core/v1"
-         xmlns:sendmail="http://axkit.org/NS/xsp/param/v1"
+         xmlns:param="http://axkit.org/NS/xsp/param/v1"
     >
 
 And add the taglib to AxKit (via httpd.conf or .htaccess):
